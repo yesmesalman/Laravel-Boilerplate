@@ -33,3 +33,12 @@ Route::get('/states/get-cities', [App\Http\Controllers\Admin\CommonController::c
 
 Route::get('/settings', [App\Http\Controllers\Admin\SettingsController::class, 'index'])->name('settings.index');
 Route::post('/settings', [App\Http\Controllers\Admin\SettingsController::class, 'index']);
+
+Route::get('/subscriptions', [App\Http\Controllers\Admin\SubscriptionsController::class, 'index'])->name('subscriptions.index');
+
+Route::get('/plans/view/{id?}', [App\Http\Controllers\Admin\PlansController::class, 'index'])->name('plans.index');
+Route::get('/plans/create', [App\Http\Controllers\Admin\PlansController::class, 'create'])->name('plans.create');
+Route::post('/plans/create', [App\Http\Controllers\Admin\PlansController::class, 'create']);
+Route::get('/plans/delete/{id}', [App\Http\Controllers\Admin\PlansController::class, 'delete'])->name('plans.delete');
+Route::get('/plans/edit/{id}', [App\Http\Controllers\Admin\PlansController::class, 'update'])->name('plans.edit');
+Route::post('/plans/edit/{id}', [App\Http\Controllers\Admin\PlansController::class, 'update']);
