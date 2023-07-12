@@ -16,10 +16,11 @@ use App\Models\UserCard;
 use App\Models\UserDetail;
 use App\Models\Payment;
 use Carbon\Carbon;
+use Laravel\Cashier\Billable;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, HasApiTokens;
+    use HasFactory, Notifiable, HasApiTokens, Billable;
 
     /**
      * The attributes that are mass assignable.
