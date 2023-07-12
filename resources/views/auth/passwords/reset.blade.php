@@ -1,59 +1,94 @@
 @extends('layouts.app')
 
 @section('content')
-<body class="bg-gradient-primary">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-xl-10 col-lg-12 col-md-9">
-                <div class="card o-hidden border-0 shadow-lg my-5">
-                    <div class="card-body p-0">
-                        <div class="row">
-                            <div class="col-lg-6 d-none d-lg-block bg-password-image"></div>
-                            <div class="col-lg-6">
-                                <div class="p-5">
-                                    @if (session('status'))
+
+    <body class="loading">
+        <div class="account-pages mt-5 mb-5">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-md-8 col-lg-6 col-xl-4">
+                        <div class="card">
+                            <div class="card-body p-4">
+                                @if (session('status'))
                                     <div class="alert alert-success" role="alert">
                                         {{ session('status') }}
                                     </div>
-                                    @endif
-                                    <div class="text-center">
-                                        <h1 class="h4 text-gray-900 mb-2">{{ __('Reset Password') }}</h1>
-                                        <p class="mb-4">Please enter your New Password</p>
+                                @endif
+                                <div class="text-center w-75 m-auto">
+                                    <div class="auth-logo">
+                                        <a href="index.html" class="logo logo-dark text-center">
+                                            <span class="logo-lg">
+                                                <img src={{ asset('assets/images/logo-dark.png') }} alt=""
+                                                    height="22">
+                                            </span>
+                                        </a>
+                                        <a href="index.html" class="logo logo-light text-center">
+                                            <span class="logo-lg">
+                                                <img src={{ asset('assets/images/logo-light.png') }} alt=""
+                                                    height="22">
+                                            </span>
+                                        </a>
                                     </div>
-                                    <form method="POST" action="{{ route('password.update') }}">
-                                        @csrf
-                                        <input type="hidden" name="token" value="{{ $token }}">
-                                        <div class="form-group">
-                                            <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ $email ?? old('email') }}" required autocomplete="email" autofocus>
-                                            @error('email')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                            @enderror
-                                        </div>
-                                        <div class="form-group">
-                                            <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" autocomplete="new-password" placeholder="******" />
-
-                                            @error('password')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                            @enderror
-                                        </div>
-                                        <div class="form-group">
-                                            <input id="password-confirm" type="password" class="form-control" name="password_confirmation" autocomplete="new-password" placeholder="******" />
-                                        </div>
-                                        <button type="submit" class="btn btn-primary btn-user btn-block">
-                                            {{ __('Reset Password') }}
-                                        </button>
-                                    </form>
+                                    <p class="text-muted mb-4 mt-3">Enter your email address and we'll send you an email
+                                        with instructions to reset your password.
+                                    </p>
                                 </div>
-                            </div>
+                                <form method="POST" action="{{ route('password.email') }}">
+                                    @csrf
+                                    <input type="hidden" name="token" value="{{ $token }}">
+                                    <div class="mb-3">
+                                        <label for="emailaddress" class="form-label">Email address</label>
+                                        <input class="form-control @error('email') is-invalid @enderror" name="email"
+                                            type="email" id="emailaddress" required=""
+                                            placeholder="Enter your email" />
+                                        @error('email')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="password" class="form-label">Password</label>
+                                        <input id="password-confirm" type="password" class="form-control"
+                                            name="password_confirmation" autocomplete="new-password" placeholder="******" />
+                                    </div>
+                                    <div class="d-grid text-center">
+                                        <button class="btn btn-primary" type="submit"> {{ __('Reset Password') }}
+                                        </button>
+                                    </div>
+                                </form>
+
+                            </div> <!-- end card-body -->
                         </div>
-                    </div>
+                        <!-- end card -->
+
+                        <div class="row mt-3">
+                            <div class="col-12 text-center">
+                                <p class="text-muted">Back to <a href="auth-login.html"
+                                        class="text-primary fw-medium ms-1">Log in</a></p>
+                            </div> <!-- end col -->
+                        </div>
+                        <!-- end row -->
+
+                    </div> <!-- end col -->
                 </div>
+                <!-- end row -->
             </div>
+            <!-- end container -->
         </div>
-    </div>
-</body>
+        <!-- end page -->
+
+        <footer class="footer footer-alt">
+            <script>
+                document.write(new Date().getFullYear())
+            </script> &copy; Minton theme by <a href="#" class="text-dark">Coderthemes</a>
+        </footer>
+
+        <!-- Vendor js -->
+        <script src={{ asset('assets/js/vendor.min.js') }}></script>
+
+        <!-- App js -->
+        <script src={{ asset('assets/js/app.min.js') }}></script>
+
+    </body>
 @endsection
