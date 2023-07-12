@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -29,15 +30,6 @@ Route::get('/users/view/{id}', [App\Http\Controllers\Admin\UsersController::clas
 Route::post('/users/view/{id}', [App\Http\Controllers\Admin\UsersController::class, 'view']);
 
 Route::get('/states/get-cities', [App\Http\Controllers\Admin\CommonController::class, 'getCities'])->name('states.get-cities');
-
-Route::get('/subscriptions', [App\Http\Controllers\Admin\SubscriptionsController::class, 'index'])->name('subscriptions.index');
-
-Route::get('/plans/view/{id?}', [App\Http\Controllers\Admin\PlansController::class, 'index'])->name('plans.index');
-Route::get('/plans/create', [App\Http\Controllers\Admin\PlansController::class, 'create'])->name('plans.create');
-Route::post('/plans/create', [App\Http\Controllers\Admin\PlansController::class, 'create']);
-Route::get('/plans/delete/{id}', [App\Http\Controllers\Admin\PlansController::class, 'delete'])->name('plans.delete');
-Route::get('/plans/edit/{id}', [App\Http\Controllers\Admin\PlansController::class, 'update'])->name('plans.edit');
-Route::post('/plans/edit/{id}', [App\Http\Controllers\Admin\PlansController::class, 'update']);
 
 Route::get('/settings', [App\Http\Controllers\Admin\SettingsController::class, 'index'])->name('settings.index');
 Route::post('/settings', [App\Http\Controllers\Admin\SettingsController::class, 'index']);
