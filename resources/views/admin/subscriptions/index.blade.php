@@ -7,12 +7,12 @@
                 <nav aria-label="breadcrumb" class="my-2">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Subscriptions</li>
+                        <li class="breadcrumb-item active" aria-current="page">Users</li>
                     </ol>
                 </nav>
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Subscriptions</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Users</h6>
                     </div>
                     <div class="card-body">
                         @if (session()->has('flash_error'))
@@ -32,6 +32,7 @@
                                         <th>Plan</th>
                                         <th>Amount</th>
                                         <th>Status</th>
+                                        <th>...</th>
                                     </tr>
                                 </thead>
                                 <tfoot>
@@ -42,31 +43,30 @@
                                         <th>Plan</th>
                                         <th>Amount</th>
                                         <th>Status</th>
+                                        <th>...</th>
                                     </tr>
                                 </tfoot>
                                 <tbody>
-                                    @foreach ($payments as $payment)
+                                    @foreach($subscription as $s)
                                         <tr>
-                                            <td>{{ $payment->id }}</td>
-                                            <td>{{ $payment->getCreatedAtForHumans() }}</td>
+                                            <td>{{ $s->id }}</td>
+                                            <td>{{ $s->getCreatedAtForHumans() }}</td>
                                             <td>
-                                                @if ($payment->User)
-                                                    <a
-                                                        href="{{ route('users.view', $payment->user_id) }}">{{ $payment->User->first_name . ' ' . $payment->User->last_name }}</a>
+                                                @if($s->User)
+                                                <a href="{{ route('users.view', $s->user_id) }}">{{ $s->User->full_name }}</a>
                                                 @else
-                                                    -
+                                                -
                                                 @endif
                                             </td>
                                             <td>
-                                                @if ($payment->Plan)
-                                                    <a
-                                                        href="{{ route('plans.index', $payment->Plan->id) }}">{{ $payment->Plan->name }}</a>
+                                                @if($s->Plan)
+                                                <a href="{{ route('plans.index', $s->Plan->id) }}">{{ $s->Plan->name }}</a>
                                                 @else
-                                                    -
+                                                -
                                                 @endif
                                             </td>
-                                            <td>${{ $payment->amount }}</td>
-                                            <td><span class="badge badge-success">COMPLETED</span></td>
+                                            <td>${{ $s->Plan->price }}</td>
+                                            <td><span class="badge {{$s->status == 'cancelled' ? 'badge-danger' : 'badge-success'}} ">{{$s->status == 'cancelled' ? 'In-active' : 'Active'}}</span></td>
                                         </tr>
                                     @endforeach
                                 </tbody>
