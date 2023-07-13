@@ -22,6 +22,7 @@ class CreatePlansTable extends Migration
             $table->string('currency')->nullable();
             $table->string('recurring')->nullable();
             $table->string('description');
+            $table->string('price_id')->nullable();
             $table->timestamps();
         });
     }

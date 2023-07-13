@@ -13,8 +13,9 @@ use App\Enums\UserTypes;
                 <nav aria-label="breadcrumb" class="my-2">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-                        <li class="breadcrumb-item"><a href="{{ route('plans.index') }}">Manage Plans</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Create New Plan</li>
+                        <li class="breadcrumb-item"><a href="{{ route('plans.index') }}">Plans</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Add Plan
+                        </li>
                     </ol>
                 </nav>
                 <div class="row">
@@ -35,7 +36,7 @@ use App\Enums\UserTypes;
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <h5 class="h5 mb-2 text-gray-800">Create New Plan</h5>
+                                            <h5 class="h5 mb-2 text-gray-800">Plan Details</h5>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -54,24 +55,9 @@ use App\Enums\UserTypes;
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="slug">Slug</label>
-                                                <input id="slug" type="text" name="slug"
-                                                    value="{{ old('slug') }}"
-                                                    class="form-control @error('slug') is-invalid @enderror" />
-                                                @error('slug')
-                                                    <span class="invalid-feedback" role="alert">
-                                                        <strong>{{ $message }}</strong>
-                                                    </span>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
                                                 <label for="price">Price</label>
                                                 <input id="price" type="text" name="price"
-                                                    value="{{ old('price') }}"
+                                                    value="{{ old('price')  }}"
                                                     class="form-control @error('price') is-invalid @enderror" />
                                                 @error('price')
                                                     <span class="invalid-feedback" role="alert">
@@ -82,11 +68,44 @@ use App\Enums\UserTypes;
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-md-12">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="slug">Slug</label>
+                                                <input id="slug" type="text" name="slug"
+                                                    class="form-control"  />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="recurring">Recurrance</label>
+                                                <select name="recurring" id="recurring" class="form-control">
+                                                    <option selected disabled>Select Any One</option>
+                                                    <option value="week">Weekly</option>
+                                                    <option value="month">Monthly</option>
+                                                    <option value="year">Yearly</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="currency">Currency</label>
+                                                <input id="currency" type="text" name="currency"
+                                                    value="{{ old('currency') }}"
+                                                    class="form-control @error('currency') is-invalid @enderror" />
+                                                @error('currency')
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="description">Description</label>
-                                                <textarea name="description" id="description" cols="30" rows="2"
-                                                    class="form-control @error('description') is-invalid @enderror">{{ old('description') }}</textarea>
+                                                <textarea name="description" id="description" cols="30" rows="2" class="form-control @error('description') is-invalid @enderror">{{old('description') }}</textarea>
                                                 @error('description')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -98,7 +117,7 @@ use App\Enums\UserTypes;
                                     <div class="row mt-2">
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <button type="submit" class="btn btn-primary">Create</button>
+                                                <button type="submit" class="btn btn-primary">Save Changes</button>
                                             </div>
                                         </div>
                                     </div>
@@ -106,8 +125,10 @@ use App\Enums\UserTypes;
                             </form>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
     </div>
 @endsection
+
