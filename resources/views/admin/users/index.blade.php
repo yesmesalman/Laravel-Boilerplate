@@ -1,3 +1,9 @@
+<?php
+
+use App\Enums\UserTypes;
+
+?>
+
 @extends('layouts.dashboard')
 
 @section('content')
@@ -23,7 +29,8 @@
                             <div class="alert alert-success">{{ session()->get('flash_success') }}</div>
                         @endif
                         <div class="table-responsive">
-                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <table class="table table-bordered user-data-table" id="dataTable" width="100%"
+                                cellspacing="0">
                                 <thead>
                                     <tr>
                                         <th>...</th>
@@ -51,28 +58,6 @@
                                     </tr>
                                 </tfoot>
                                 <tbody>
-                                    @foreach ($users as $user)
-                                        <tr>
-                                            <td>{{ $user->id }}</td>
-                                            <td>{{ $user->getCreatedAtForHumans() }}</td>
-                                            <td>{{ $user->first_name }} {{ $user->last_name }}</td>
-                                            <td>{{ $user->email }}</td>
-                                            <td>{{ $user->Country ? $user->Country->name : '-' }}</td>
-                                            <td>{{ $user->State ? $user->State->name : '-' }}</td>
-                                            <td>{{ $user->City ? $user->City->name : '-' }}</td>
-                                            <td>
-                                                @if ($user->status == 1)
-                                                    <span class="badge badge-success">Activated</span>
-                                                @else
-                                                    <span class="badge badge-secondary">Disabled</span>
-                                                @endif
-                                            </td>
-                                            <td>
-                                                <a href="{{ route('users.view', $user->id) }}">View</a> |
-                                                <a href="{{ route('users.view', $user->id) }}">Edit</a>
-                                            </td>
-                                        </tr>
-                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
@@ -81,4 +66,62 @@
             </div>
         </div>
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script type="text/javascript">
+        $(function() {
+            var table = $('#dataTable').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    url: "{{ route('users.index', ['type' => $type]) }}",
+                },
+                columns: [{
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex',
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'name',
+                        name: 'name'
+                    },
+                    {
+                        data: 'email',
+                        name: 'email'
+                    },
+                    {
+                        data: 'country_id',
+                        name: 'country_id'
+                    },
+                    {
+                        data: 'state_id',
+                        name: 'state_id'
+                    },
+                    {
+                        data: 'city_id',
+                        name: 'city_id'
+                    },
+                    {
+                        data: 'status',
+                        name: 'status',
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'edit',
+                        name: 'id',
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'view',
+                        name: 'id',
+                        orderable: false,
+                        searchable: false
+                    }
+                ]
+            });
+        });
+    </script>
 @endsection

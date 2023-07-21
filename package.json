@@ -10,5 +10,9 @@
         "lodash": "^4.17.19",
         "postcss": "^8.1.14",
         "vite": "^4.0.0"
+    },
+    "dependencies": {
+        "datatables.net-dt": "^1.13.5",
+        "laravel-datatables-vite": "^0.5.2"
     }
 }
