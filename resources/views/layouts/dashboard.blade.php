@@ -37,6 +37,11 @@ use App\Enums\UserTypes;
     <!-- icons -->
     <link rel="stylesheet" href={{ asset('assets/css/icons.min.css') }}>
 
+    <!-- JQuery CDN -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <!-- DataTable -->
+    <script src="{{ asset('vendor/datatables/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
 </head>
 
 <body class="loading"

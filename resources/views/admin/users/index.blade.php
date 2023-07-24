@@ -29,11 +29,11 @@ use App\Enums\UserTypes;
                             <div class="alert alert-success">{{ session()->get('flash_success') }}</div>
                         @endif
                         <div class="table-responsive">
-                            <table class="table table-bordered user-data-table" id="dataTable" width="100%"
+                            <table class="table table-bordered" id="dataTable" width="100%"
                                 cellspacing="0">
                                 <thead>
                                     <tr>
-                                        <th>...</th>
+                                        <th>Id</th>
                                         <th>Created At</th>
                                         <th>Name</th>
                                         <th>Email</th>
@@ -41,12 +41,12 @@ use App\Enums\UserTypes;
                                         <th>State</th>
                                         <th>City</th>
                                         <th>Status</th>
-                                        <th>...</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tfoot>
                                     <tr>
-                                        <th>...</th>
+                                        <th>Id</th>
                                         <th>Created At</th>
                                         <th>Name</th>
                                         <th>Email</th>
@@ -54,7 +54,7 @@ use App\Enums\UserTypes;
                                         <th>State</th>
                                         <th>City</th>
                                         <th>Status</th>
-                                        <th>...</th>
+                                        <th>Action</th>
                                     </tr>
                                 </tfoot>
                                 <tbody>
@@ -66,8 +66,6 @@ use App\Enums\UserTypes;
             </div>
         </div>
     </div>
-
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script type="text/javascript">
         $(function() {
             var table = $('#dataTable').DataTable({
@@ -83,6 +81,10 @@ use App\Enums\UserTypes;
                         searchable: false
                     },
                     {
+                        data: 'created_at',
+                        name: 'created_at'
+                    },
+                    {
                         data: 'name',
                         name: 'name'
                     },
@@ -91,34 +93,43 @@ use App\Enums\UserTypes;
                         name: 'email'
                     },
                     {
-                        data: 'country_id',
-                        name: 'country_id'
+                        data: 'country',
+                        name: 'country'
                     },
                     {
-                        data: 'state_id',
-                        name: 'state_id'
+                        data: 'state',
+                        name: 'state'
                     },
                     {
-                        data: 'city_id',
-                        name: 'city_id'
+                        data: 'city',
+                        name: 'city'
                     },
                     {
                         data: 'status',
                         name: 'status',
                         orderable: false,
-                        searchable: false
+                        searchable: false,
+                        render: function(data, type, row) {
+                            var badgeClass = (data == 1) ? 'badge badge-success bg-success' :
+                                'badge badge-danger bg-danger';
+                            var statusText = (data == 1) ? 'Activated' : 'Disabled';
+                            return '<span class="' + badgeClass + '">' + statusText + '</span>';
+                        }
                     },
                     {
-                        data: 'edit',
-                        name: 'id',
+                        data: 'action',
+                        name: 'action',
                         orderable: false,
-                        searchable: false
-                    },
-                    {
-                        data: 'view',
-                        name: 'id',
-                        orderable: false,
-                        searchable: false
+                        searchable: false,
+                        render: function(data, type, row) {
+                            var editButton = '<a href="/users/view/' + row.id +
+                                '"class="btn btn-warning">Edit</a>';
+                            var viewButton = '<a href="/users/view/' + row.id +
+                                '" class="btn btn-info">View</a>';
+                            var buttonHtml = '<div class="text-center">' + editButton + ' ' +
+                                viewButton + '</div>';
+                            return buttonHtml;
+                        }
                     }
                 ]
             });

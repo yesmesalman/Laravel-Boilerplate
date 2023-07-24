@@ -6,20 +6,37 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Plan;
 use Illuminate\Support\Facades\Redirect;
+use Yajra\DataTables\Facades\DataTables;
 
 class PlansController extends Controller
 {
     public function index(Request $request, $id = null)
     {
-        $plans = Plan::all();
-
-        if ($id != null) {
-            $plans = Plan::where("id", $id)->get();
+        if ($id !== null) {
+            $plan = Plan::findOrFail($id);
+            return view('admin.plans.view', compact('plan'));
         }
 
-        return view('admin.plans.index', [
-            "plans" => $plans
-        ]);
+        if ($request->ajax()) {
+            $plans = Plan::all();
+            return DataTables::of($plans)
+                ->addIndexColumn()
+                ->addColumn('name', function (Plan $plan) {
+                    return $plan->name;
+                })
+                ->addColumn('slug', function (Plan $plan) {
+                    return $plan->slug;
+                })
+                ->addColumn('price', function (Plan $plan) {
+                    return $plan->price;
+                })
+                ->addColumn('created_at', function (Plan $plan) {
+                    return $plan->created_at;
+                })
+                ->make(true);
+        }
+
+        return view('admin.plans.index');
     }
 
     public function create(Request $request)

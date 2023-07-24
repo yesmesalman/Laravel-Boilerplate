@@ -30,39 +30,23 @@
                             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                 <thead>
                                     <tr>
-                                        <th>...</th>
+                                        <th>Id</th>
                                         <th>Name</th>
                                         <th>Slug</th>
                                         <th>Price</th>
                                         <th>Created At</th>
-                                        <th>...</th>
                                     </tr>
                                 </thead>
                                 <tfoot>
                                     <tr>
-                                        <th>...</th>
+                                        <th>Id</th>
                                         <th>Name</th>
                                         <th>Slug</th>
                                         <th>Price</th>
                                         <th>Created At</th>
-                                        <th>...</th>
                                     </tr>
                                 </tfoot>
                                 <tbody>
-                                    @foreach ($plans as $plan)
-                                        <tr>
-                                            <td>{{ $plan->id }}</td>
-                                            <td>{{ $plan->name }}</td>
-                                            <td>{{ $plan->slug }}</td>
-                                            <td>${{ $plan->price }}</td>
-                                            <td>{{ $plan->getCreatedAtForHumans() }}</td>
-                                            <td>
-                                                <a href="{{ route('plans.edit', $plan->id) }}">View</a> |
-                                                <a href="{{ route('plans.edit', $plan->id) }}">Edit</a>
-                                                {{-- <a href="{{ route('plans.delete', $plan->id) }}" style="color: red" onclick="return confirm('Are you sure?')">Delete</a> --}}
-                                            </td>
-                                        </tr>
-                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
@@ -71,4 +55,38 @@
             </div>
         </div>
     </div>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            var table = $('#dataTable').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    url: "{{ route('plans.index') }}",
+                },
+                columns: [
+                    {
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex',
+                        orderable: false
+                    },
+                    {
+                        data: 'name',
+                        name: 'name'
+                    },
+                    {
+                        data: 'slug',
+                        name: 'slug'
+                    },
+                    {
+                        data: 'price',
+                        name: 'price'
+                    },
+                    {
+                        data: 'created_at',
+                        name: 'created_at'
+                    },
+                ]
+            });
+        });
+    </script>
 @endsection

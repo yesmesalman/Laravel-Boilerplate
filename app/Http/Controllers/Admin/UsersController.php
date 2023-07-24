@@ -7,8 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Enums\UserTypes;
 use Illuminate\Support\Facades\Redirect;
-use DataTables;
-
+use Yajra\DataTables\Facades\DataTables;
 
 class UsersController extends Controller
 {
@@ -41,20 +40,16 @@ class UsersController extends Controller
                 ->addColumn('city', function (User $user) {
                     return $user->city_id;
                 })
-                ->addColumn('status', function (User $user) {
-                    $btn = '<a href="javascript:void(0)" class="badge badge-success">' . $user->status . '</a>';
-                    if ($user->status == 'in-active') {
-                        $btn = '<a href="javascript:void(0)" class="badge badge-danger">' . $user->status . '</a>';
-                    }
-                    return $btn;
-                })
                 ->addColumn('edit', function (User $user) {
                     return $user->id;
                 })
                 ->addColumn('view', function (User $user) {
                     return $user->id;
                 })
-                ->rawColumns(['action', 'status', 'created_at'])
+                ->addColumn('created_at', function (User $user) {
+                    return $user->getCreatedAtForHumans();
+                })
+                ->rawColumns(['action', 'status'])
                 ->make(true);
         }
         return view('admin.users.index', compact('type'));
