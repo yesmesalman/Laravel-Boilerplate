@@ -26,49 +26,25 @@
                             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                 <thead>
                                     <tr>
-                                        <th>...</th>
+                                        <th>Id</th>
                                         <th>Created At</th>
                                         <th>User</th>
                                         <th>Plan</th>
                                         <th>Amount</th>
                                         <th>Status</th>
-                                        <th>...</th>
                                     </tr>
                                 </thead>
                                 <tfoot>
                                     <tr>
-                                        <th>...</th>
+                                        <th>Id</th>
                                         <th>Created At</th>
                                         <th>User</th>
                                         <th>Plan</th>
                                         <th>Amount</th>
                                         <th>Status</th>
-                                        <th>...</th>
                                     </tr>
                                 </tfoot>
                                 <tbody>
-                                    @foreach($subscription as $s)
-                                        <tr>
-                                            <td>{{ $s->id }}</td>
-                                            <td>{{ $s->getCreatedAtForHumans() }}</td>
-                                            <td>
-                                                @if($s->User)
-                                                <a href="{{ route('users.view', $s->user_id) }}">{{ $s->User->full_name }}</a>
-                                                @else
-                                                -
-                                                @endif
-                                            </td>
-                                            <td>
-                                                @if($s->Plan)
-                                                <a href="{{ route('plans.index', $s->Plan->id) }}">{{ $s->Plan->name }}</a>
-                                                @else
-                                                -
-                                                @endif
-                                            </td>
-                                            <td>${{ $s->Plan->price }}</td>
-                                            <td><span class="badge {{$s->status == 'cancelled' ? 'badge-danger' : 'badge-success'}} ">{{$s->status == 'cancelled' ? 'In-active' : 'Active'}}</span></td>
-                                        </tr>
-                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
@@ -77,4 +53,41 @@
             </div>
         </div>
     </div>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            var table = $('#dataTable').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    url: "{{ route('subscriptions.index') }}",
+                },
+                columns: [{
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex',
+                        orderable: false
+                    },
+                    {
+                        data: 'created_at',
+                        name: 'created_at'
+                    },
+                    {
+                        data: 'user.name',
+                        name: 'user.name'
+                    },
+                    {
+                        data: 'plan.name',
+                        name: 'plan.name'
+                    },
+                    {
+                        data: 'plan.price',
+                        name: 'plan.price'
+                    },
+                    {
+                        data: 'status',
+                        name: 'status'
+                    },
+                ]
+            });
+        });
+    </script>
 @endsection

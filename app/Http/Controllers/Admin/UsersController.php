@@ -32,13 +32,13 @@ class UsersController extends Controller
                     return $user->email;
                 })
                 ->addColumn('country', function (User $user) {
-                    return $user->country_id;
+                    return $user->getUserDisplayFields()['country'];
                 })
                 ->addColumn('state', function (User $user) {
-                    return $user->state_id;
+                    return $user->getUserDisplayFields()['state'];
                 })
                 ->addColumn('city', function (User $user) {
-                    return $user->city_id;
+                    return $user->getUserDisplayFields()['city'];
                 })
                 ->addColumn('edit', function (User $user) {
                     return $user->id;

@@ -14,7 +14,8 @@ use App\Enums\UserTypes;
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
                         <li class="breadcrumb-item"><a href="{{ $users_url }}">Users</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">{{ $user->first_name }} {{ $user->last_name }}
+                        <li class="breadcrumb-item active" aria-current="page">{{ $user->first_name }}
+                            {{ $user->last_name }}
                         </li>
                     </ol>
                 </nav>
@@ -201,9 +202,7 @@ use App\Enums\UserTypes;
             </div>
         </div>
     </div>
-@endsection
 
-@section('footer-scripts')
     <script>
         const old_state_id = "{{ (old('state_id') ? old('state_id') : $user->state_id) ? $user->state_id : '' }}";
         const old_city_id = "{{ (old('city_id') ? old('city_id') : $user->city_id) ? $user->city_id : '' }}";
