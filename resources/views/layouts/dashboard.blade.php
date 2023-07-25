@@ -145,7 +145,7 @@ use App\Enums\UserTypes;
                         <a class="nav-link dropdown-toggle nav-user me-0 waves-effect waves-light"
                             data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false"
                             aria-expanded="false">
-                            <img src={{ auth()->user()->profile_picture }} alt="user-image" class="rounded-circle">
+                            <img src={{ auth()->user()->profile_picture ?? asset('assets/images/users/avatar-1.jpg') }} alt="user-image" class="rounded-circle">
                             <span class="pro-user-name ms-1">
                                 {{ auth()->user()->first_name }} {{ auth()->user()->last_name }} <i
                                     class="mdi mdi-chevron-down"></i>

@@ -32,7 +32,7 @@ use App\Enums\UserTypes;
                 <div class="row">
                     <div class="col-md-6">
                         <div class="card shadow mb-4">
-                            <form method="POST">
+                            <form method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="card-body">
                                     <div class="row">
@@ -159,6 +159,30 @@ use App\Enums\UserTypes;
                                                 @enderror
                                             </div>
                                         </div>
+                                        <div class="col-12 mt-2">
+                                            <div class="card shadow mb-4">
+                                                <div class="card-body">
+                                                    <div class="form-group">
+                                                        <input type="file" name="profile_picture" id="profile_picture"
+                                                            class="form-control-file @error('profile_picture') is-invalid @enderror"
+                                                            onchange="previewImage(event)">
+                                                        @if ($user->profile_picture)
+                                                            <img id="current-image"
+                                                                src="{{ asset('images/users/' . $user->profile_picture) }}"
+                                                                alt="{{ $user->user_name }}"
+                                                                style="max-width: 200px; max-height: 200px; margin-top: 20px;">
+                                                        @endif
+                                                        @error('profile_picture')
+                                                            <div class="invalid-feedback">{{ $message }}</div>
+                                                        @enderror
+                                                        <div class="mt-2">
+                                                            <img id="image-preview" src="#" alt="Image Preview"
+                                                                style="max-width: 200px; max-height: 200px; display: none;">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="row mt-2">
                                         <div class="col-md-12">
@@ -241,6 +265,23 @@ use App\Enums\UserTypes;
 
         if (old_state_id) {
             getCities(old_state_id);
+        }
+
+        function previewImage(event) {
+            var input = event.target;
+            var preview = document.getElementById('image-preview');
+            var currentImage = document.getElementById('current-image');
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.setAttribute('src', e.target.result);
+                    preview.style.display = 'block';
+                    if (currentImage) {
+                        currentImage.style.display = 'none';
+                    }
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
         }
     </script>
 @endsection

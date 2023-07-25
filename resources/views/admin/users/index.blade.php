@@ -17,8 +17,16 @@ use App\Enums\UserTypes;
                     </ol>
                 </nav>
                 <div class="card shadow mb-4">
-                    <div class="card-header py-3">
+                    <div class="card-header py-3 d-flex justify-content-between">
                         <h6 class="m-0 font-weight-bold text-primary">Users</h6>
+                        <div>
+                            @if (request()->segment(3) == UserTypes::User || request()->segment(3) == UserTypes::Moderator)
+                                <a href="{{ route('users.create', ['type' => request()->segment(3)]) }}"
+                                    class="btn btn-primary">
+                                    Add User
+                                </a>
+                            @endif
+                        </div>
                     </div>
                     <div class="card-body">
                         @if (session()->has('flash_error'))
@@ -29,8 +37,7 @@ use App\Enums\UserTypes;
                             <div class="alert alert-success">{{ session()->get('flash_success') }}</div>
                         @endif
                         <div class="table-responsive">
-                            <table class="table table-bordered" id="dataTable" width="100%"
-                                cellspacing="0">
+                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                 <thead>
                                     <tr>
                                         <th>Id</th>
@@ -116,6 +123,9 @@ use App\Enums\UserTypes;
                             return '<span class="' + badgeClass + '">' + statusText + '</span>';
                         }
                     },
+
+
+
                     {
                         data: 'action',
                         name: 'action',
@@ -123,14 +133,30 @@ use App\Enums\UserTypes;
                         searchable: false,
                         render: function(data, type, row) {
                             var editButton = '<a href="/users/view/' + row.id +
-                                '"class="btn btn-warning">Edit</a>';
+                                '" class="btn btn-warning">Edit</a>';
                             var viewButton = '<a href="/users/view/' + row.id +
                                 '" class="btn btn-info">View</a>';
-                            var buttonHtml = '<div class="text-center">' + editButton + ' ' +
-                                viewButton + '</div>';
+                            var deleteButton = '';
+
+                            // Check if the user role_id is either 1 or 2, and if so, add the delete button
+                            if (row.role_id == 1 || row.role_id == 2) {
+                                deleteButton = '<form class="delete-form" action="/users/delete/' +
+                                    row.id +
+                                    '" method="POST">@csrf @method('POST')<button type="submit" class="btn btn-danger">Delete</button></form>';
+                            }
+
+                            var buttonHtml = '<div class="d-flex justify-content-evenly">' + editButton + ' ' +
+                                viewButton + ' ' + deleteButton + '</div>';
                             return buttonHtml;
                         }
                     }
+
+
+
+
+
+
+
                 ]
             });
         });

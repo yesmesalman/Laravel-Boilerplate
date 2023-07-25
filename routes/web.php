@@ -26,10 +26,14 @@ Route::get('/profile', [App\Http\Controllers\Admin\ProfileController::class, 'in
 Route::post('/profile', [App\Http\Controllers\Admin\ProfileController::class, 'index']);
 
 Route::get('/users/index/{type}', [App\Http\Controllers\Admin\UsersController::class, 'index'])->name('users.index');
+Route::get('/users/create/{type}', [App\Http\Controllers\Admin\UsersController::class, 'create'])->name('users.create');
+Route::post('/users/create/{type}', [App\Http\Controllers\Admin\UsersController::class, 'store']);
 Route::get('/users/view/{id}', [App\Http\Controllers\Admin\UsersController::class, 'view'])->name('users.view');
 Route::post('/users/view/{id}', [App\Http\Controllers\Admin\UsersController::class, 'view']);
+Route::delete('users/delete/{id}', [App\Http\Controllers\Admin\UsersController::class, 'delete'])->name('users.delete');
 
 Route::get('/states/get-cities', [App\Http\Controllers\Admin\CommonController::class, 'getCities'])->name('states.get-cities');
+Route::get('/states/get-states', [App\Http\Controllers\Admin\CommonController::class, 'getStates'])->name('states.get-states');
 
 Route::get('/settings', [App\Http\Controllers\Admin\SettingsController::class, 'index'])->name('settings.index');
 Route::post('/settings', [App\Http\Controllers\Admin\SettingsController::class, 'index']);
