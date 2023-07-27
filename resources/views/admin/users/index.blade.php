@@ -64,8 +64,7 @@ use App\Enums\UserTypes;
                                         <th>Action</th>
                                     </tr>
                                 </tfoot>
-                                <tbody>
-                                </tbody>
+                                <tbody></tbody>
                             </table>
                         </div>
                     </div>
@@ -74,8 +73,9 @@ use App\Enums\UserTypes;
         </div>
     </div>
     <script type="text/javascript">
-        $(function() {
+        $(function($) {
             var table = $('#dataTable').DataTable({
+                "pagingType": "full_numbers",
                 processing: true,
                 serverSide: true,
                 ajax: {
@@ -123,9 +123,6 @@ use App\Enums\UserTypes;
                             return '<span class="' + badgeClass + '">' + statusText + '</span>';
                         }
                     },
-
-
-
                     {
                         data: 'action',
                         name: 'action',
@@ -145,18 +142,12 @@ use App\Enums\UserTypes;
                                     '" method="POST">@csrf @method('POST')<button type="submit" class="btn btn-danger">Delete</button></form>';
                             }
 
-                            var buttonHtml = '<div class="d-flex justify-content-evenly">' + editButton + ' ' +
+                            var buttonHtml = '<div class="d-flex justify-content-evenly">' +
+                                editButton + ' ' +
                                 viewButton + ' ' + deleteButton + '</div>';
                             return buttonHtml;
                         }
                     }
-
-
-
-
-
-
-
                 ]
             });
         });

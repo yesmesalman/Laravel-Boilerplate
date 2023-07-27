@@ -39,6 +39,7 @@ use App\Enums\UserTypes;
 
     <!-- JQuery CDN -->
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
     <!-- DataTable -->
     <script src="{{ asset('vendor/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
@@ -145,7 +146,8 @@ use App\Enums\UserTypes;
                         <a class="nav-link dropdown-toggle nav-user me-0 waves-effect waves-light"
                             data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false"
                             aria-expanded="false">
-                            <img src={{ auth()->user()->profile_picture ?? asset('assets/images/users/avatar-1.jpg') }} alt="user-image" class="rounded-circle">
+                            <img src={{ auth()->user()->profile_picture ?? asset('assets/images/users/avatar-1.jpg') }}
+                                alt="user-image" class="rounded-circle">
                             <span class="pro-user-name ms-1">
                                 {{ auth()->user()->first_name }} {{ auth()->user()->last_name }} <i
                                     class="mdi mdi-chevron-down"></i>
@@ -158,7 +160,8 @@ use App\Enums\UserTypes;
                             </div>
 
                             <!-- item-->
-                            <a href="{{ route('users.view', [auth()->user()->id]) }}" class="dropdown-item notify-item">
+                            <a href="{{ route('users.view', [auth()->user()->id]) }}"
+                                class="dropdown-item notify-item">
                                 <i class="ri-account-circle-line"></i>
                                 <span>My Account</span>
                             </a>
@@ -992,21 +995,6 @@ use App\Enums\UserTypes;
     <script src={{ asset('assets/js/app.min.js') }}></script>
 
     <script src="{{ asset('vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-
-    <!-- DataTable -->
-    <script src="{{ asset('vendor/datatables/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
-
-    <script>
-        $(document).ready(function() {
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-        });
-    </script>
-    <script src="{{ asset('js/demo/datatables-demo.js') }}"></script>
 </body>
 
 </html>

@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Khsing\World\Models\Country;
+use Khsing\World\Models\Division as State;
+use Khsing\World\Models\City;
 use Yajra\DataTables\Facades\DataTables;
 
 class UsersController extends Controller
@@ -22,10 +24,13 @@ class UsersController extends Controller
 
     public function index($type = UserTypes::LIST, Request $request)
     {
-        $this->users->where('role_id', $type)->get();
         if ($request->ajax()) {
-            $model = User::where('role_id', $type);
-            return DataTables::of($model)
+            $query = User::query()
+                ->where('role_id', $type)
+                ->leftJoin('world_countries as countries', 'users.country_id', '=', 'countries.id')
+                ->leftJoin('world_countries as states', 'users.state_id', '=', 'states.id')
+                ->leftJoin('world_countries as cities', 'users.city_id', '=', 'cities.id');
+            return DataTables::eloquent($query)
                 ->addIndexColumn()
                 ->addColumn('name', function (User $user) {
                     return $user->first_name . " " . $user->last_name;
@@ -54,7 +59,28 @@ class UsersController extends Controller
                 ->addColumn('created_at', function (User $user) {
                     return $user->getCreatedAtForHumans();
                 })
-                ->rawColumns(['action', 'status'])
+                // Add searching functionality for specific columns
+                ->filterColumn('name', function ($query, $keyword) {
+                    $query->whereRaw("CONCAT(users.first_name, ' ', users.last_name) like ?", ["%{$keyword}%"]);
+                })
+                ->filterColumn('email', function ($query, $keyword) {
+                    $query->where('users.email', 'like', "%{$keyword}%");
+                })
+                ->filterColumn('country', function ($query, $keyword) {
+                    $query->where('countries.name', 'like', "%{$keyword}%");
+                })
+                ->filterColumn('state', function ($query, $keyword) {
+                    $query->where('states.name', 'like', "%{$keyword}%");
+                })
+                ->filterColumn('city', function ($query, $keyword) {
+                    $query->where('cities.name', 'like', "%{$keyword}%");
+                })
+                ->orderColumn('created_at', 'users.created_at $1')
+                ->orderColumn('name', 'users.first_name $1, users.last_name $1')
+                ->orderColumn('email', 'users.email $1')
+                ->orderColumn('country', 'countries.name $1')
+                ->orderColumn('state', 'states.name $1')
+                ->orderColumn('city', 'cities.name $1')
                 ->make(true);
         }
         return view('admin.users.index', compact('type'));
@@ -76,9 +102,9 @@ class UsersController extends Controller
             'last_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:191', 'unique:users,email'],
             'password' => ['required', 'string'],
-            'country_id' => ['required'],
-            'state_id' => ['required'],
-            'city_id' => ['required'],
+            'country_id' => ['numeric'],
+            'state_id' => ['numeric'],
+            'city_id' => ['numeric'],
             'zip_code' => ['required'],
             'contact_number' => ['required'],
         ];
@@ -124,8 +150,9 @@ class UsersController extends Controller
             $validation = [
                 'first_name' => ['required', 'string', 'max:255'],
                 'last_name' => ['required', 'string', 'max:255'],
-                'state_id' => ['required', 'numeric'],
-                'city_id' => ['required', 'numeric'],
+                'country_id' => ['numeric'],
+                'state_id' => ['numeric'],
+                'city_id' => ['numeric'],
                 'zip_code' => ['required'],
                 'contact_number' => ['required'],
             ];
