@@ -56,15 +56,14 @@
         </div>
     </div>
     <script type="text/javascript">
-        $(document).ready(function() {
+        $(function($) {
             var table = $('#dataTable').DataTable({
                 processing: true,
                 serverSide: true,
                 ajax: {
                     url: "{{ route('plans.index') }}",
                 },
-                columns: [
-                    {
+                columns: [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex',
                         orderable: false
