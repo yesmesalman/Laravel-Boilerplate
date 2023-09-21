@@ -8,12 +8,14 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 use App\Enums\UserTypes;
-use Mail;
-use Hash;
 use App\Mail\ForgotPasswordMail;
 use App\Helpers\Media;
+use App\Mail\CareTakerRegisteredMail;
+use App\Mail\RegisterUserMail;
 use App\Models\ChatRoom;
 use Exception;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 
 class UserController extends Controller
 {
@@ -38,48 +40,132 @@ class UserController extends Controller
         $user->fcm_token = $fcm_token;
         $user->save();
     }
-
     public function register(Request $request)
     {
         try {
-            $validation = [
-                'first_name' => 'required|max:255',
-                'last_name' => 'required|max:255',
-                'email' => 'required|email|unique:users',
-                'password' => 'required|confirmed|min:6',
-                'country_id' => 'numeric',
-                'state_id' => 'numeric',
-                'city_id' => 'numeric',
-                'zip_code' => 'string',
-                'contact_number' => 'required|max:255'
-            ];
+            $otp = rand(1000, 9999);
+            
+            $userType = $request->input('user_type');
+            if ($userType === 'patient') {
+                $validator = Validator::make($request->all(), [
+                    'full_name' => 'required|string|max:120',
+                    'email' => 'required|email|unique:users|max:30',
+                    'height' => 'required|numeric',
+                    'weight' => 'required|numeric',
+                    'relation_to_patient' => 'required|string',
+                    'gender' => 'required|in:male,female',
+                    'dob' => 'required',
+                    'contact_number' => 'required|string|max:15',
+                    'medical_condition' => 'required|string',
+                    'major_disease' => 'required|string',
+                    'full_address' => 'required|string',
+                    'password' => 'required|string|min:6|max:20|confirmed',
+                    'user_type' => 'required|in:patient',
+                ]);
 
-            $validator = Validator::make($request->all(), $validation);
+                if ($validator->fails()) {
+                    return response()->json([
+                        'status' => 422,
+                        'success' => false,
+                        'message' => 'Validation failed',
+                        'errors' => $validator->errors(),
+                    ], 422);
+                }
+                $otp = rand(1000, 9999);
+                $patient = new User();
+                $patient->full_name = $request->input('full_name');
+                $patient->email = $request->input('email');
+                $patient->contact_number = $request->input('contact_number');
+                $patient->dob = $request->input('dob');
+                $patient->full_address = $request->input('full_address');
+                $patient->password = Hash::make($request->input('password'));
+                $patient->dob = $request->input('dob');
+                $patient->height = $request->input('height');
+                $patient->weight = $request->input('weight');
+                $patient->gender = $request->input('gender');
+                $patient->status = 0;
+                $patient->medical_condition = $request->input('medical_condition');
+                $patient->major_disease = $request->input('major_disease');
+                $patient->role_id = 1;
+                $patient->user_type = 'patient';
+                $patient->otp = $otp;
+                $patient->save();
+                $body = [
+                    'name' => $patient->full_name,
+                    'email' => $patient->email,
+                    'otp' => $otp
+                ];
+    
+                Mail::to($patient->email)->send(new RegisterUserMail($body));
+         
 
-            if ($validator->fails()) {
-                throw new \ErrorException($validator->errors()->first());
+            } elseif ($userType === 'caretaker') {
+                $validator = Validator::make($request->all(), [
+                    'full_name' => 'required|string|max:120',
+                    'email' => 'required|email|unique:users|max:30',
+                    'password' => 'required|string|min:6|confirmed',
+                    'contact_number' => 'required|string|max:15',
+                    'dob' => 'required|date|before:-18 years',
+                    'full_address' => 'required|string',
+                    'relationship_status' => 'required|string',
+                    'gender' => 'required|in:male,female',
+                ]);
+
+                if ($validator->fails()) {
+                    return response()->json([
+                        'status' => 422,
+                        'success' => false,
+                        'message' => 'Validation failed',
+                        'errors' => $validator->errors(),
+                    ], 422);
+                }
+
+                $caretaker = new User();
+                $caretaker->full_name = $request->input('full_name');
+                $caretaker->email = $request->input('email');
+                $caretaker->contact_number = $request->input('contact_number');
+                $caretaker->dob = $request->input('dob');
+                $caretaker->full_address = $request->input('full_address');
+                $caretaker->gender = $request->input('gender');
+                $caretaker->relationship_status = $request->input('relationship_status');
+                $caretaker->status = 0;
+                $caretaker->password = Hash::make($request->input('password'));
+                $caretaker->role_id = 2; // Set caretaker role_id
+                $caretaker->user_type = 'caretaker';
+                $caretaker->otp = $otp;
+                $caretaker->save();
+                $body = [
+                    'name' => $caretaker->full_name,
+                    'email' => $caretaker->email,
+                    'otp' => $otp
+                ];
+    
+                Mail::to($caretaker->email)->send(new CareTakerRegisteredMail($body));
+            } else {
+                return response()->json([
+                    'status' => 422,
+                    'success' => false,
+                    'message' => 'Invalid user_type',
+                ], 422);
             }
 
-            $input = $request->all();
-            $input['password'] = bcrypt($input['password']);
-            $input['otp'] = $this->genegerateOTP();
-            $input['status'] = 1; // Account is active by default
-            $input['role_id'] = UserTypes::User; // Account is type User
-
-            $user = User::create($input);
-
             $response = [
-                'status' => 200,
-                'message' => 'Acccount has been created',
-                'data' => $this->userAuthResponse($user)
+                'status' => 201,
+                'success' => true,
+                'message' => ucfirst($userType) . ' registered successfully',
+                'user_type' => $userType,
+                'data' => ($userType === 'patient') ? $patient : [$caretaker],
             ];
 
-            return response()->json($response, 200);
-        } catch (Exception $e) {
-            return response()->json([
-                'status' => 422,
-                'message' => $e->getMessage(),
-            ], 422);
+            return response()->json($response, 201);
+        } catch (\Exception $e) {
+            $response = [
+                'status' => 500,
+                'success' => false,
+                'message' => 'An error occurred during registration',
+                'error' => $e->getMessage(),
+            ];
+            return response()->json($response, 500);
         }
     }
 

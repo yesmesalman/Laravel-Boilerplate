@@ -42,6 +42,9 @@ Route::middleware('auth:api')->group(function () {
         Route::post('create-chat-room', [UserController::class, 'createChatRoom']);
         Route::post('get-all-chats-rooms', [UserController::class, 'getAllChatsRooms']);
 
+        Route::post('get-plans', [SubscriptionController::class, 'getPlans']);
+        Route::post('purchase-plan', [SubscriptionController::class, 'purchasePlan']);
 
+        Route::post('update-card', [SubscriptionController::class, 'updateCard']);
     });
 });

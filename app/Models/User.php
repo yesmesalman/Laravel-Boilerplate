@@ -16,19 +16,20 @@ use App\Models\UserCard;
 use App\Models\UserDetail;
 use App\Models\Payment;
 use Carbon\Carbon;
-use Laravel\Cashier\Billable;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, HasApiTokens, Billable;
+    use HasFactory, Notifiable, HasApiTokens;
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
+
+     
     protected $fillable = [
-        'first_name', 'last_name', 'status', 'role_id', 'country_id', 'state_id', 'city_id', 'zip_code', 'service_id', 'experience', 'otp', 'status', 'email', 'password', 'contact_mode', 'contact_number', 'profile_picture'
+        'first_name', 'last_name', 'status', 'role_id', 'country_id', 'state_id', 'city_id', 'zip_code', 'service_id', 'experience', 'otp', 'status', 'email', 'password', 'contact_mode', 'contact_number', 'profile_picture','full_address','emergency_contact','dob','contact','user_type','gender', 'medical_condition', 'major_disease'
     ];
 
     /**
